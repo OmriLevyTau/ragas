@@ -29,6 +29,10 @@ def isBedrock(llm: BaseLLM | BaseChatModel) -> bool:
 def isAmazonAPIGateway(llm: BaseLLM | BaseChatModel) -> bool:
     return isinstance(llm, AmazonAPIGateway)
 
+def isBam(llm: BaseLLM | BaseChatModel) -> bool:
+    from genai.extensions.langchain import LangChainInterface
+    return isinstance(llm, LangChainInterface)
+
 
 # have to specify it twice for runtime and static checks
 MULTIPLE_COMPLETION_SUPPORTED = [
@@ -202,6 +206,8 @@ class LangchainLLM(RagasLLM):
             self.llm.model_kwargs = {"temperature": temperature}
         elif isAmazonAPIGateway(self.llm) and ("model_kwargs" in self.llm.__dict__):
             self.llm.model_kwargs = {"temperature": temperature}
+        elif isBam(self.llm):
+            self.llm.params.temperature = temperature
         else:
             self.llm.temperature = temperature
 
