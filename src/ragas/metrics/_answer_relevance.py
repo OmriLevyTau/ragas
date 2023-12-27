@@ -132,7 +132,8 @@ class AnswerRelevancy(MetricWithLLM):
             scores = []
             for question, result in zip(questions, results):
                 gen_questions = [item.get("question", "") for item in result]
-                committal = np.any([item.get("noncommittal", False) for item in result])
+                # committal = np.any([item.get("noncommittal", False) for item in result])
+                committal = False
                 cosine_sim = self.calculate_similarity(question, gen_questions)
                 scores.append(cosine_sim.mean() * int(not committal))
 
